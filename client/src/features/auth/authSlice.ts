@@ -12,6 +12,8 @@ interface AuthState {
 
 const user = JSON.parse(localStorage.getItem('user') || '{}');
 
+const API_URL = 'https://mern-auth-practice-backend.onrender.com/api/users';
+
 const initialState: AuthState = {
   user: user ? user : null,
   details: [],
@@ -33,10 +35,7 @@ export const register = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      const response = await axios.post(
-        'http://localhost:5001/api/users',
-        userData
-      );
+      const response = await axios.post(API_URL, userData);
 
       if (response.data) {
         localStorage.setItem('user', JSON.stringify(response.data));
@@ -58,10 +57,7 @@ export const login = createAsyncThunk(
   'auth/login',
   async (userData: { email: string; password: string }, thunkAPI) => {
     try {
-      const response = await axios.post(
-        'http://localhost:5001/api/users/login',
-        userData
-      );
+      const response = await axios.post(API_URL + '/login', userData);
 
       if (response.data) {
         localStorage.setItem('user', JSON.stringify(response.data));
@@ -86,10 +82,7 @@ export const loginGoogle = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      const response = await axios.post(
-        'http://localhost:5001/api/users/google',
-        userData
-      );
+      const response = await axios.post(API_URL + '/google', userData);
 
       if (response.data) {
         localStorage.setItem('user', JSON.stringify(response.data));
@@ -119,10 +112,7 @@ export const userDetails = createAsyncThunk(
         },
       };
 
-      const response = await axios.get(
-        'http://localhost:5001/api/users/me',
-        config
-      );
+      const response = await axios.get(API_URL + '/me', config);
 
       return response.data;
     } catch (err: any) {
@@ -145,9 +135,7 @@ export const deleteUser = createAsyncThunk(
   'auth/deleteUser',
   async (userId: string, thunkAPI) => {
     try {
-      const response = await axios.delete(
-        `http://localhost:5001/api/users/${userId}`
-      );
+      const response = await axios.delete(API_URL + `/${userId}`);
 
       return response.data;
     } catch (err: any) {
