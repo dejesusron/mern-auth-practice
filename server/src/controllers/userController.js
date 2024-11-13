@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
 import bcrypt from 'bcryptjs';
 import generateToken from '../middlewares/tokenMiddleware.js';
+import nodemailer from 'nodemailer';
 
 // @desc: Get all users
 // @route: GET /api/users
@@ -117,7 +118,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 });
 
 // @desc: authenticate a user
-// @route: DELETE /api/users/signin
+// @route: POST /api/users/signin
 // @access: Public
 const signinUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -146,7 +147,7 @@ const signinUser = asyncHandler(async (req, res) => {
 });
 
 // @desc: authenticate a user using google
-// @route: DELETE /api/users/google
+// @route: POST /api/users/google
 // @access: Public
 const signinGoogle = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -182,6 +183,50 @@ const signinGoogle = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc: forgot a password
+// @route: POST /api/users/forgot-password
+// @access: Public
+const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    res.status(404);
+    throw new Error('User not exist');
+  }
+
+  const token = generateToken(user._id);
+  // res.status(200).json(token);
+
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // true for port 465, false for other ports
+    auth: {
+      user: process.env.NODEMAILER_USER,
+      pass: process.env.NODEMAILER_PASS,
+    },
+  });
+
+  // send mail with defined transport object
+  const mailOptions = {
+    from: '"Auth practice" <dejesusronel29@gmail.com>',
+    to: `dejesusronel29@gmail.com, ${email}`,
+    subject: 'Reset your password',
+    text: `http://localhost:3000/reset-password/${user._id}/${token}`,
+  };
+
+  await transporter.sendMail(mailOptions, function (err, info) {
+    if (err) {
+      res.status(400);
+      throw new Error(err);
+    } else {
+      res.status(200).json({ message: 'Email successfully sent!' });
+    }
+  });
+});
+
 export {
   getUsers,
   getUser,
@@ -190,4 +235,5 @@ export {
   updateUser,
   signinUser,
   signinGoogle,
+  forgotPassword,
 };

@@ -7,6 +7,7 @@ import {
   signinUser,
   updateUser,
   signinGoogle,
+  forgotPassword,
 } from '../controllers/userController.js';
 import { protect } from '../middlewares/authMiddleware.js';
 
@@ -19,5 +20,6 @@ router.delete('/:id', deleteUser);
 router.put('/:id', updateUser);
 router.post('/login', signinUser);
 router.post('/google', signinGoogle);
+router.post('/forgot-password', forgotPassword);
 
 export default router;

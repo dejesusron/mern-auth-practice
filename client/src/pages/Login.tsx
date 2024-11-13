@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { reset, login } from '../features/auth/authSlice';
 import { AppDispatch, RootState } from '../app/store';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link, Outlet } from 'react-router-dom';
 import SigninGoogle from '../components/SigninGoogle';
 import Loading from '../components/Loading';
 
@@ -72,7 +72,7 @@ const Login = () => {
             <form className='flex gap-y-3 flex-col' onSubmit={handleSubmit}>
               <div>
                 <input
-                  type='text'
+                  type='email'
                   placeholder='Email'
                   className='input input-bordered w-full max-w-xs'
                   name='email'
@@ -94,6 +94,9 @@ const Login = () => {
                 <button className='btn btn-neutral w-full' type='submit'>
                   Sign in
                 </button>
+                <Link to='/forgot-password' className='block mt-2 underline'>
+                  Forgot password?
+                </Link>
               </div>
               <div>
                 <div className='divider'>OR</div>

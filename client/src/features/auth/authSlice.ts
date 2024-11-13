@@ -31,7 +31,13 @@ type AsyncThunkConfig = {
 
 const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-const API_URL = 'https://mern-auth-practice-backend.onrender.com/api/users';
+let API_URL = '';
+
+if (process.env.NODE_ENVIRONMENT === 'development') {
+  API_URL = 'http://localhost:5001/api/users';
+} else if (process.env.NODE_ENVIRONMENT === 'production') {
+  API_URL = 'https://mern-auth-practice-backend.onrender.com/api/users';
+}
 
 const initialState: AuthState = {
   user: user ? user : null,

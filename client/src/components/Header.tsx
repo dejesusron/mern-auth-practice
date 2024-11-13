@@ -25,6 +25,9 @@ const Header = () => {
     } else if (location.pathname === '/profile') {
       setLogin(true);
       setRegister(true);
+    } else if (location.pathname === '/forgot-password') {
+      setLogin(false);
+      setRegister(false);
     }
   }, [location]);
 
