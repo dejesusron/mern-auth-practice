@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { RootState } from '../../app/store';
 import axios from 'axios';
 
 interface User {
@@ -8,20 +9,18 @@ interface User {
   token: string;
 }
 
-interface Detail {
-  _id: string;
-  name: string;
-  email: string;
-  createdAt: string;
-}
 interface AuthState {
-  user: User;
-  details: Detail;
+  user: User | null;
+  details: [];
   isError: boolean;
   isSuccess: boolean;
   isLoading: boolean;
   message: string;
 }
+
+type AsyncThunkConfig = {
+  state: RootState;
+};
 
 const user = JSON.parse(localStorage.getItem('user') || '{}');
 
@@ -113,11 +112,11 @@ export const loginGoogle = createAsyncThunk(
 );
 
 // user details
-export const userDetails = createAsyncThunk(
+export const userDetails = createAsyncThunk<[], string, AsyncThunkConfig>(
   'auth/userDetails',
-  async (userId: string, thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
-      const token = thunkAPI.getState().auth.user.token;
+      const token = thunkAPI.getState().auth.user?.token;
 
       const config = {
         headers: {

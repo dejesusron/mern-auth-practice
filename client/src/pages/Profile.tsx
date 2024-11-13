@@ -32,8 +32,6 @@ const Profile = () => {
     }
   }, [user, message, isError, navigate, dispatch]);
 
-  console.log(details);
-
   const handleDelete = () => {
     Swal.fire({
       title: 'Are you sure you want to delete?',
@@ -51,12 +49,16 @@ const Profile = () => {
           icon: 'success',
         });
 
-        dispatch(deleteUser(user._id));
-        dispatch(reset());
-        navigate('/login');
+        if (user) {
+          dispatch(deleteUser(user._id));
+          dispatch(reset());
+          navigate('/login');
+        }
       }
     });
   };
+
+  console.log(details);
 
   return (
     <div className='grid place-items-center min-h-screen'>
