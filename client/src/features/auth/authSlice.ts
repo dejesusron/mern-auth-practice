@@ -9,9 +9,16 @@ interface User {
   token: string;
 }
 
+interface Details {
+  _id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+}
+
 interface AuthState {
   user: User | null;
-  details: [];
+  details: Details[] | any;
   isError: boolean;
   isSuccess: boolean;
   isLoading: boolean;

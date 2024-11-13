@@ -13,6 +13,8 @@ const Profile = () => {
     (state: RootState) => state.auth
   );
 
+  const { name, email, createdAt } = details;
+
   useEffect(() => {
     if (isError) {
       Swal.fire({
@@ -72,15 +74,15 @@ const Profile = () => {
         <div className='card-body'>
           <h2 className='card-title font-normal'>
             <span className='text-lg font-bold'>Name: </span>
-            {details.name}
+            {name}
           </h2>
           <p>
             <span className='text-lg font-bold'>Email: </span>
-            {details.email}
+            {email}
           </p>
           <p>
             <span className='text-lg font-bold'>Created: </span>
-            {new Date(details.createdAt).toLocaleDateString('en-US')}
+            {new Date(createdAt).toLocaleDateString('en-US')}
           </p>
           <br />
           <button onClick={handleDelete} className='btn btn-error'>
