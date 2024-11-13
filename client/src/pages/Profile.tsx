@@ -32,6 +32,8 @@ const Profile = () => {
     }
   }, [user, message, isError, navigate, dispatch]);
 
+  console.log(details);
+
   const handleDelete = () => {
     Swal.fire({
       title: 'Are you sure you want to delete?',
