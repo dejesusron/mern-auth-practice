@@ -5,6 +5,7 @@ import { AppDispatch, RootState } from '../app/store';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import SigninGoogle from '../components/SigninGoogle';
+import Loading from '../components/Loading';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -19,7 +20,7 @@ const Register = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { user, isError, isSuccess, message } = useSelector(
+  const { user, isError, isSuccess, isLoading, message } = useSelector(
     (state: RootState) => state.auth
   );
 
@@ -65,6 +66,10 @@ const Register = () => {
       dispatch(register(userData));
     }
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className='container mx-auto px-4'>

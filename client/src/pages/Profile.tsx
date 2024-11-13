@@ -4,12 +4,13 @@ import { AppDispatch, RootState } from '../app/store';
 import { useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { userDetails, reset, deleteUser } from '../features/auth/authSlice';
+import Loading from '../components/Loading';
 
 const Profile = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { user, details, message, isError } = useSelector(
+  const { user, details, message, isError, isLoading } = useSelector(
     (state: RootState) => state.auth
   );
 
@@ -60,7 +61,9 @@ const Profile = () => {
     });
   };
 
-  console.log(details);
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className='grid place-items-center min-h-screen'>

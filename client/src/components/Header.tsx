@@ -53,7 +53,10 @@ const Header = () => {
   };
 
   return (
-    <header className='navbar fixed top-0 left-0 bg-base-200'>
+    <header
+      className={`${
+        location.pathname === '/' ? 'hidden' : 'flex'
+      }  navbar fixed top-0 left-0 bg-base-200`}>
       <div className='flex-1'>
         <Link to='/' className='btn btn-ghost text-xl'>
           daisyUI
