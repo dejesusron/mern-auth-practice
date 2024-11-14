@@ -8,6 +8,7 @@ import {
   updateUser,
   signinGoogle,
   forgotPassword,
+  resetPassword,
 } from '../controllers/userController.js';
 import { protect } from '../middlewares/authMiddleware.js';
 
@@ -21,5 +22,6 @@ router.put('/:id', updateUser);
 router.post('/login', signinUser);
 router.post('/google', signinGoogle);
 router.post('/forgot-password', forgotPassword);
+router.post('/reset-password/:id/:token', resetPassword);
 
 export default router;

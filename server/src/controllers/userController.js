@@ -3,6 +3,7 @@ import User from '../models/userModel.js';
 import bcrypt from 'bcryptjs';
 import generateToken from '../middlewares/tokenMiddleware.js';
 import nodemailer from 'nodemailer';
+import jwt from 'jsonwebtoken';
 
 // @desc: Get all users
 // @route: GET /api/users
@@ -240,6 +241,31 @@ const forgotPassword = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc: reset password
+// @route: POST /api/users/reset-password
+// @access: Public
+const resetPassword = asyncHandler(async (req, res) => {
+  const { id, token } = req.params;
+  const { password } = req.body;
+
+  // verify token
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+  // hash password
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  const user = await User.findById(id);
+
+  if (user.password === hashedPassword) {
+    res.status(200).json({ message: 'Same password' });
+  } else {
+    res.status(200).json({ message: 'not the same password' });
+  }
+
+  res.status(200).json({ user, decoded, hashedPassword });
+});
+
 export {
   getUsers,
   getUser,
@@ -249,4 +275,5 @@ export {
   signinUser,
   signinGoogle,
   forgotPassword,
+  resetPassword,
 };
