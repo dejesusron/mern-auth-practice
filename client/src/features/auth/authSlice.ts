@@ -168,6 +168,24 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
+// forgot password
+export const forgotPassword = createAsyncThunk(
+  'auth/forgotPassword',
+  async (email: string, thunkAPI) => {
+    try {
+      const response = await axios.post(API_URL + '/forgot-password', email);
+
+      return response.data.message;
+    } catch (err: any) {
+      const message =
+        (err.response && err.response.data && err.response.data.message) ||
+        err.message ||
+        err.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -242,16 +260,31 @@ export const authSlice = createSlice({
       .addCase(deleteUser.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(deleteUser.fulfilled, (state) => {
+      .addCase(deleteUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.user = null;
+        state.user = action.payload;
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
         state.details = [];
+      })
+      .addCase(forgotPassword.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(forgotPassword.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = action.payload;
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload as string;
+        state.details = [];
+        state.user = null;
       })
       .addCase(logout.fulfilled, (state) => {
         state.user = null;

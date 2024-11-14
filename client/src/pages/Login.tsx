@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { reset, login } from '../features/auth/authSlice';
 import { AppDispatch, RootState } from '../app/store';
 import Swal from 'sweetalert2';
-import { useNavigate, Link, Outlet } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import SigninGoogle from '../components/SigninGoogle';
 import Loading from '../components/Loading';
 
