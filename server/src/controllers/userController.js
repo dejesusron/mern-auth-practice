@@ -242,28 +242,36 @@ const forgotPassword = asyncHandler(async (req, res) => {
 });
 
 // @desc: reset password
-// @route: POST /api/users/reset-password
+// @route: POST /api/users/reset-password/:id/:token
 // @access: Public
 const resetPassword = asyncHandler(async (req, res) => {
   const { id, token } = req.params;
   const { password } = req.body;
 
   // verify token
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const decoded = jwt.verify(token, process.env.JWT_SECRET, async (err) => {
+    if (err) {
+      res.status(400);
+      throw new Error('Error with token');
+    } else {
+      // hash password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
 
-  // hash password
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+      const updatedUser = await User.findByIdAndUpdate(
+        id,
+        { password: hashedPassword },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
 
-  const user = await User.findById(id);
+      res.status(200).json({ message: 'Password successfully changed' });
+    }
+  });
 
-  if (user.password === hashedPassword) {
-    res.status(200).json({ message: 'Same password' });
-  } else {
-    res.status(200).json({ message: 'not the same password' });
-  }
-
-  res.status(200).json({ user, decoded, hashedPassword });
+  return decoded;
 });
 
 export {

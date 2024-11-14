@@ -22,6 +22,6 @@ router.put('/:id', updateUser);
 router.post('/login', signinUser);
 router.post('/google', signinGoogle);
 router.post('/forgot-password', forgotPassword);
-router.post('/reset-password/:id/:token', resetPassword);
+router.put('/reset-password/:id/:token', resetPassword);
 
 export default router;

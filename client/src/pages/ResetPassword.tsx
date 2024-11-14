@@ -1,7 +1,45 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '../app/store';
+import { reset, resetPassword } from '../features/auth/authSlice';
+import Loading from '../components/Loading';
+import Swal from 'sweetalert2';
 
 const ResetPassword = () => {
   const [password, setPassword] = useState('');
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { id, token } = useParams();
+
+  const { isError, isLoading, isSuccess, message } = useSelector(
+    (state: RootState) => state.auth
+  );
+
+  useEffect(() => {
+    if (isError) {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: `${message}`,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+
+      dispatch(reset());
+    }
+
+    if (isSuccess) {
+      Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: `${message}`,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  }, [isError, isSuccess, dispatch, message]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
@@ -10,10 +48,27 @@ const ResetPassword = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const passwordData = { password };
+    const userData = { id, token, password };
 
-    console.log(passwordData);
+    dispatch(resetPassword(userData));
   };
+
+  //   const updateData = async () => {
+  //     try {
+  //       const response = await axios.put(
+  //         `http://localhost:5001/api/users/reset-password/${id}/${token}`,
+  //         { password }
+  //       );
+
+  //       console.log(response);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className='container mx-auto px-4'>
@@ -25,7 +80,7 @@ const ResetPassword = () => {
             <form onSubmit={handleSubmit} className='flex gap-y-3 flex-col'>
               <div>
                 <input
-                  type='email'
+                  type='text'
                   placeholder='New password'
                   className='input input-bordered w-full max-w-xs'
                   name='email'
