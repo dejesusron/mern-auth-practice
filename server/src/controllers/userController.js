@@ -214,7 +214,20 @@ const forgotPassword = asyncHandler(async (req, res) => {
     from: '"Auth practice" <dejesusronel29@gmail.com>',
     to: `dejesusronel29@gmail.com, ${email}`,
     subject: 'Reset your password',
-    text: `http://localhost:3000/reset-password/${user._id}/${token}`,
+    // text: `http://localhost:3000/reset-password/${user._id}/${token}`,
+    text: `
+    Hi,
+
+    You recently requested to reset your password for Auth-practice.
+
+    To reset your password, please click the following link:
+
+    http://localhost:3000/reset-password/${user._id}/${token}
+
+    If you didn't request a password reset, please ignore this email.
+
+    Best regards,
+    Ron De jesus`,
   };
 
   await transporter.sendMail(mailOptions, function (err, info) {
