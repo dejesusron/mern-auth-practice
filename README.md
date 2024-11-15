@@ -1,4 +1,4 @@
-# SaveURL.v2
+# MERN-auth-practice
 
 Click [here](https://mern-auth-practice-client.vercel.app/) to visit the web app.
 
