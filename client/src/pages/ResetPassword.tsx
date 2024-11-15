@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../app/store';
 import { reset, resetPassword } from '../features/auth/authSlice';
@@ -10,6 +10,7 @@ const ResetPassword = () => {
   const [password, setPassword] = useState('');
 
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   const { id, token } = useParams();
 
@@ -38,8 +39,11 @@ const ResetPassword = () => {
         showConfirmButton: false,
         timer: 1500,
       });
+
+      dispatch(reset());
+      navigate('/login');
     }
-  }, [isError, isSuccess, dispatch, message]);
+  }, [isError, isSuccess, dispatch, message, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
@@ -52,19 +56,6 @@ const ResetPassword = () => {
 
     dispatch(resetPassword(userData));
   };
-
-  //   const updateData = async () => {
-  //     try {
-  //       const response = await axios.put(
-  //         `http://localhost:5001/api/users/reset-password/${id}/${token}`,
-  //         { password }
-  //       );
-
-  //       console.log(response);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
 
   if (isLoading) {
     return <Loading />;

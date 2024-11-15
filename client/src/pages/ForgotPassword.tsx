@@ -17,6 +17,10 @@ const ForgotPassword = () => {
   );
 
   useEffect(() => {
+    if (location.pathname === '/forgot-password') {
+      dispatch(reset());
+    }
+
     if (isError) {
       Swal.fire({
         position: 'center',

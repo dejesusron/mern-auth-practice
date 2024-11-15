@@ -18,7 +18,7 @@ interface Details {
 
 interface AuthState {
   user: User | null;
-  details: Details[] | any;
+  details: Details[];
   isError: boolean;
   isSuccess: boolean;
   isLoading: boolean;
@@ -31,8 +31,8 @@ type AsyncThunkConfig = {
 
 const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-// const API_URL = 'https://mern-auth-practice-backend.onrender.com/api/users';
-const API_URL = 'http://localhost:5001/api/users';
+const API_URL = 'https://mern-auth-practice-backend.onrender.com/api/users';
+// const API_URL = 'http://localhost:5001/api/users';
 
 const initialState: AuthState = {
   user: user ? user : null,
@@ -287,14 +287,15 @@ export const authSlice = createSlice({
       })
       .addCase(deleteUser.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.isError = false;
         state.isSuccess = true;
-        state.user = action.payload;
+        state.message = action.payload;
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
+        state.isSuccess = false;
         state.message = action.payload as string;
-        state.details = [];
       })
       .addCase(forgotPassword.pending, (state) => {
         state.isLoading = true;
@@ -308,7 +309,6 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
-        state.details = [];
         state.user = null;
       })
       .addCase(resetPassword.pending, (state) => {

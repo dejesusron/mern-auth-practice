@@ -52,13 +52,15 @@ const Profile = () => {
           icon: 'success',
         });
 
-        if (user) {
-          dispatch(deleteUser(user._id));
-          dispatch(reset());
-          navigate('/login');
-        }
+        dispatch(deleteUser(user._id));
+        dispatch(reset());
+        localStorage.removeItem('user');
+        navigate('/login');
       }
     });
+    // dispatch(deleteUser(user._id));
+    // dispatch(reset());
+    // navigate('/login');
   };
 
   if (isLoading) {
