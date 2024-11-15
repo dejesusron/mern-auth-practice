@@ -53,9 +53,7 @@ const ForgotPassword = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const emailData = { email };
-
-    dispatch(forgotPassword(emailData));
+    dispatch(forgotPassword(email));
   };
 
   if (isLoading) {

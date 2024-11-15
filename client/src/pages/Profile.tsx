@@ -14,8 +14,6 @@ const Profile = () => {
     (state: RootState) => state.auth
   );
 
-  const { name, email, createdAt } = details;
-
   useEffect(() => {
     if (isError) {
       Swal.fire({
@@ -46,21 +44,20 @@ const Profile = () => {
       confirmButtonText: 'Delete',
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: 'Account deleted!',
-          text: 'Your account has been deleted.',
-          icon: 'success',
-        });
+        if (user) {
+          Swal.fire({
+            title: 'Account deleted!',
+            text: 'Your account has been deleted.',
+            icon: 'success',
+          });
 
-        dispatch(deleteUser(user._id));
-        dispatch(reset());
-        localStorage.removeItem('user');
-        navigate('/login');
+          dispatch(deleteUser(user._id));
+          dispatch(reset());
+          localStorage.removeItem('user');
+          navigate('/login');
+        }
       }
     });
-    // dispatch(deleteUser(user._id));
-    // dispatch(reset());
-    // navigate('/login');
   };
 
   if (isLoading) {
@@ -79,15 +76,17 @@ const Profile = () => {
         <div className='card-body'>
           <h2 className='card-title font-normal'>
             <span className='text-lg font-bold'>Name: </span>
-            {name}
+            {details?.name}
           </h2>
           <p>
             <span className='text-lg font-bold'>Email: </span>
-            {email}
+            {details?.email}
           </p>
           <p>
             <span className='text-lg font-bold'>Created: </span>
-            {new Date(createdAt).toLocaleDateString('en-US')}
+            {new Date(details?.createdAt ?? new Date()).toLocaleDateString(
+              'en-US'
+            )}
           </p>
           <br />
           <button onClick={handleDelete} className='btn btn-error'>

@@ -18,7 +18,7 @@ interface Details {
 
 interface AuthState {
   user: User | null;
-  details: Details[];
+  details: Details | null;
   isError: boolean;
   isSuccess: boolean;
   isLoading: boolean;
@@ -30,13 +30,14 @@ type AsyncThunkConfig = {
 };
 
 const user = JSON.parse(localStorage.getItem('user') || '{}');
+const details = JSON.parse(localStorage.getItem('user') || '{}');
 
 const API_URL = 'https://mern-auth-practice-backend.onrender.com/api/users';
 // const API_URL = 'http://localhost:5001/api/users';
 
 const initialState: AuthState = {
   user: user ? user : null,
-  details: [],
+  details: details ? details : null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -120,7 +121,7 @@ export const loginGoogle = createAsyncThunk(
 );
 
 // user details
-export const userDetails = createAsyncThunk<[], string, AsyncThunkConfig>(
+export const userDetails = createAsyncThunk<null, string, AsyncThunkConfig>(
   'auth/userDetails',
   async (_, thunkAPI) => {
     try {
@@ -173,7 +174,9 @@ export const forgotPassword = createAsyncThunk(
   'auth/forgotPassword',
   async (email: string, thunkAPI) => {
     try {
-      const response = await axios.post(API_URL + '/forgot-password', email);
+      const response = await axios.post(API_URL + '/forgot-password', {
+        email,
+      });
 
       return response.data.message;
     } catch (err: any) {
@@ -189,7 +192,7 @@ export const forgotPassword = createAsyncThunk(
 export const resetPassword = createAsyncThunk(
   'auth/resetPassword',
   async (
-    userData: { id: string; token: string; password: string },
+    userData: { id?: string; token?: string; password: string },
     thunkAPI
   ) => {
     try {
@@ -217,7 +220,7 @@ export const authSlice = createSlice({
   reducers: {
     reset: (state) => {
       state.user = null;
-      state.details = [];
+      state.details = null;
       state.isError = false;
       state.isSuccess = false;
       state.isLoading = false;
@@ -280,7 +283,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
-        state.details = [];
+        state.details = null;
       })
       .addCase(deleteUser.pending, (state) => {
         state.isLoading = true;
@@ -323,7 +326,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
-        state.details = [];
+        state.details = null;
         state.user = null;
       })
       .addCase(logout.fulfilled, (state) => {
